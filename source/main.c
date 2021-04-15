@@ -64,7 +64,7 @@ int main(void) {
 	while(1){
 		tempB0 = PORTB & 0x01;
 		tempB1 = PORTB & 0x02;
-		tempA1 = PINA & 0x02
+		tempA1 = PINA & 0x02;
 
 		if(tempB0 == 1 && tempA1 == 1){
 			B0 = 0;
@@ -82,6 +82,7 @@ int main(void) {
 			B0 = 0;
 			B1 = 1;
 		}
+	}
 
 	return 0;
 }

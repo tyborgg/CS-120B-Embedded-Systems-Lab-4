@@ -67,16 +67,16 @@ int main(void) {
 		tempB1 = PORTB & 0x02;
 		tempA0 = PINA & 0x01;
 
-		if(tempB0 == 1 && tempA1 == 1){
+		if(tempB0 == 1 && tempA0 == 1){
 			tempB = 0x02;
 		}
-		else if(tempB1 == 2 && tempA1 == 1){
+		else if(tempB1 == 2 && tempA0 == 1){
 			tempB = 0x01;
 		}
-		else if(tempB0 == 1 && tempA1 == 0){
+		else if(tempB0 == 1 && tempA0 == 0){
 			tempB = 0x01;
 		}
-		else if(tempB1 == 2 && tempA1 == 0){
+		else if(tempB1 == 2 && tempA0 == 0){
 			tempB = 0x02;
 		}
 

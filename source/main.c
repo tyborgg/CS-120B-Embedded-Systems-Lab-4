@@ -59,18 +59,18 @@ int main(void) {
 
 	unsigned char tempB0;
 	unsigned char tempB1;
-	unsigned char tempA1;
+	unsigned char tempA0;
 	unsigned char tempB;
 
 	while(1){
 		tempB0 = PORTB & 0x01;
 		tempB1 = PORTB & 0x02;
-		tempA1 = PINA & 0x02;
+		tempA0 = PINA & 0x01;
 
-		if(tempB0 == 1 && tempA1 == 2){
+		if(tempB0 == 1 && tempA1 == 1){
 			tempB = 0x02;
 		}
-		else if(tempB1 == 2 && tempA1 == 2){
+		else if(tempB1 == 2 && tempA1 == 1){
 			tempB = 0x01;
 		}
 		else if(tempB0 == 1 && tempA1 == 0){

@@ -60,6 +60,7 @@ int main(void) {
 	unsigned char tempB0;
 	unsigned char tempB1;
 	unsigned char tempA1;
+	unsigned char tempB;
 
 	while(1){
 		tempB0 = PORTB & 0x01;
@@ -67,17 +68,19 @@ int main(void) {
 		tempA1 = PINA & 0x02;
 
 		if(tempB0 == 1 && tempA1 == 2){
-			PORTB = 0x02;
+			tempB = 0x02;
 		}
 		else if(tempB1 == 2 && tempA1 == 2){
-			PORTB = 0x01;
+			tempB = 0x01;
 		}
 		else if(tempB0 == 1 && tempA1 == 0){
-			PORTB = 0x01;
+			tempB = 0x01;
 		}
 		else if(tempB1 == 2 && tempA1 == 0){
-			PORTB = 0x02;
+			tempB = 0x02;
 		}
+
+		PORTB = tempB;
 	}
 
 	return 0;

@@ -54,8 +54,8 @@ int main(void) {
     	while(1){
 		Tick_Toggle();
 	}*/
-	DDRA = 0xFF; PORTA = 0x00;
-	DDRB = 0x00; PORTB = 0xFF;
+	DDRA = 0x00; PORTA = 0xFF;
+	DDRB = 0xFF; PORTB = 0x00;
 
 	unsigned char tempB0;
 	unsigned char tempB1;

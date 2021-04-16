@@ -52,13 +52,11 @@ void Tick_Toggle() {
          		break;
       		
 		case SM1_B0:
-         		B0 = 1;
-			B1 = 0;
+         		PORTB = 0x01;
          		break;
 
       		case SM1_B1:
-         		B1 = 1;
-			B0 = 0;
+         		PORTB = 0x02;
         		 break;
    	}
 }
@@ -69,7 +67,7 @@ int main(void) {/
 
 	PORTB = 0x01;
 
-	SM1_STATE = SM1_SMStart
+	SM1_STATE = SM1_SMStart;
 
 	while(1){
 		TickToggle();

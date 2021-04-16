@@ -12,92 +12,67 @@
 #include "simAVRHeader.h"
 #endif
 
-/*enum SM1_STATES {SM1_SMStart, SM1_B0, SM1_B1} SM1_STATE;
+enum SM1_STATES {SM1_SMStart, SM1_B0, SM1_B1, SM1_Wait} SM1_STATE;
 void Tick_Toggle() { 
 	switch(SM1_STATE) { 
      		case SM1_SMStart:
       			SM1_STATE = SM1_B0;
          		break;
-      		case SM1_B0:
-			if(A0 == 1)
+
+		case SM1_Wait:
+			if(PORTB == 0x01 && PINA == 0x01){
 				SM1_STATE = SM1_B1;
-			else
+			}
+			else if(PORTB == 0x02 && PINA == 0x01){
 				SM1_STATE = SM1_B0;
+			}
+			else{
+				SM1_STATE = SM1_Wait;
+			}      		
 			break;
+
+		case SM1_B0:
+			SM1_STATE = SM1_Wait;
+			break;
+
 		case SM1_B1:
-			if(A0 == 1)
-				SM1_STATE = SM1_B0;
-			else
-				SM1_STATE = SM1_B1;
-			break
+			SM1_STATE = SM1_Wait;
+			break;
+
       		default:
-         		SM1_STATE = SM1_B0;
+         		SM1_STATE = SM1_Wait;
          		break;
    	}
+
    	switch(SM1_STATE) { 
       		case SM1_SMStart:
          		break;
-      		case SM1_B0:
+
+		case SM1_Wait:
+         		break;
+      		
+		case SM1_B0:
          		B0 = 1;
 			B1 = 0;
          		break;
+
       		case SM1_B1:
          		B1 = 1;
 			B0 = 0;
         		 break;
    	}
-}*/
+}
 
-int main(void) {
-	/*SM1_STATE = SM1_SMStart;
-
-    	while(1){
-		Tick_Toggle();
-	}*/
+int main(void) {/
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
 
-	//unsigned char tempB0;
-	//unsigned char tempB1;
-	unsigned char tempA0;
-	unsigned char tempB;
 	PORTB = 0x01;
 
+	SM1_STATE = SM1_SMStart
+
 	while(1){
-		//tempB0 = PORTB & 0x01;
-		//tempB1 = PORTB & 0x02;
-		tempA0 = PINA & 0x01;
-		tempB = PORTB;
-		/*
-		if(tempB0 == 1 && tempA0 == 1){
-			tempB = 0x02;
-		}
-		else if(tempB1 == 2 && tempA0 == 1){
-			tempB = 0x01;
-		}
-		else if(tempB0 == 1 && tempA0 == 0){
-			tempB = 0x01;
-		}
-		else if(tempB1 == 2 && tempA0 == 0){
-			tempB = 0x02;
-		}
-
-		PORTB = tempB;*/
-
-		if(tempA0 == 1 && tempB == 1){
-			tempB = 0x02;
-		}
-		else if(tempA0 == 1 && tempB == 2){
-			tempB = 0x01;
-		}	
-		else if(tempA0 == 0 && tempB == 1){
-			tempB = 0x01;
-		}
-		else if(tempA0 == 0 && tempB == 2){
-			tempB = 0x02;
-		}
-
-		PORTB = tempB;	
+		TickToggle();
 	}
 
 	return 0;

@@ -70,7 +70,7 @@ int main(void) {/
 	SM1_STATE = SM1_SMStart;
 
 	while(1){
-		TickToggle();
+		Tick_Toggle();
 	}
 
 	return 0;

@@ -100,7 +100,6 @@ void Tick_Toggle() {
 				}
 			}
 			else if(PINA == 0x00){
-				count++;
 				SM1_STATE = SM1_Wait1;		
 			}
 			else{
@@ -120,8 +119,10 @@ void Tick_Toggle() {
 				}
 			}
 			else if(PINA == 0x00){
-				count++;
 				SM1_STATE = SM1_Wait2;		
+			}
+			else if(PINA == 0x80){
+				SM1_STATE = SM1_lock;
 			}
 			else{
 				SM1_STATE = SM1_unlocked;

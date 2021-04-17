@@ -120,7 +120,7 @@ void Tick_Toggle() {
 
 		case SM1_lock:
 			PORTB = 0x00;
-			//count = 0;
+			count = count;
          		break;
 
 		case SM1_reset1:
@@ -139,7 +139,7 @@ void Tick_Toggle() {
 
 		case SM1_unlocked:
          		PORTB = 0x01;
-			//count = 0;
+			count = count;
         		break; 	
 	}
 }

@@ -20,7 +20,7 @@ void Tick_Toggle() {
          		break;
 
 		case SM1_lock:
-			if(PINA == 0x03){
+			if(PINA == 0x04){
 				SM1_STATE = SM1_pound;
 			}
 			else if(PINA == 0x02 || PINA == 0x01){
@@ -32,7 +32,7 @@ void Tick_Toggle() {
 			break;
 
 		case SM1_pound:
-			if(PINA == 0x03){
+			if(PINA == 0x04){
 				SM1_STATE = SM1_pound;	
 			}
 			else if(PINA == 0x00){

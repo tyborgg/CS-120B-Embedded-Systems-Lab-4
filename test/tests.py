@@ -32,8 +32,8 @@
 # variables listed here will display everytime you hit (and stop at) a breakpoint
 #watch = ['<function>::<static-var>','PORTB']
 
-tests = [ {'description': 'PINA: 0x03, 0x00, 0x02 => PORTB: 1, state: pressA1',
-    'steps': [{'inputs': [('PINA', 0x03)], 'iterations': 2},
+tests = [ {'description': 'PINA: 0x04, 0x00, 0x02 => PORTB: 1, state: pressA1',
+    'steps': [{'inputs': [('PINA', 0x04)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2},
         {'inputs': [('PINA', 0x02)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2}],
@@ -45,10 +45,11 @@ tests = [ {'description': 'PINA: 0x03, 0x00, 0x02 => PORTB: 1, state: pressA1',
         {'inputs': [('PINA', 0x01)], 'iterations': 2}],
     'expected': [('PORTB',0x00)],
     },   
-    {'description': 'PINA: 0x03, 0x00, 0x80 => PORTB: 0, state: pressA1',
-    'steps': [{'inputs': [('PINA', 0x03)], 'iterations': 2},
+    {'description': 'PINA: 0x04, 0x00, 0x80 => PORTB: 0, state: pressA1',
+    'steps': [{'inputs': [('PINA', 0x04)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2},
         {'inputs': [('PINA', 0x80)], 'iterations': 2}],
     'expected': [('PORTB',0x00)],
     },       
     ]
+wacth = ['state']

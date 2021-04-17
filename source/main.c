@@ -35,11 +35,11 @@ void Tick_Toggle() {
 			break;
 
 		case SM1_up:
-			SM1_STATE = SM1_Wait;
+			SM1_STATE = SM1_Waitup;
 			break;
 
 		case SM1_down:
-			SM1_STATE = SM1_Wait;
+			SM1_STATE = SM1_Waitdown;
 			break;
 
 		case SM1_reset:
@@ -53,6 +53,9 @@ void Tick_Toggle() {
 			else if(PINA == 0x00){		
 				SM1_STATE = SM1_Wait;
 			}
+			else if(PINA == 0x03){
+				SM1_STATE = SM1_reset;
+			}
 			break;
 		
 		case SM1_Waitup:
@@ -61,7 +64,10 @@ void Tick_Toggle() {
 			}
 			else if(PINA == 0x00){		
 				SM1_STATE = SM1_Wait;
-			}			
+			}
+			else if(PINA == 0x03){
+				SM1_STATE = SM1_reset;
+			}		
 			break;
 
       		default:

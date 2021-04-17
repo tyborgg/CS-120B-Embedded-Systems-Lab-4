@@ -1,7 +1,7 @@
 /*	Author: tpast001
  *  Partner(s) Name: N/A
  *	Lab Section: 023
- *	Assignment: Lab #4  Exercise #1
+ *	Assignment: Lab #4  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -35,11 +35,11 @@ void Tick_Toggle() {
 			break;
 
 		case SM1_up:
-			SM1_STATE = SM1_Wait;
+			SM1_STATE = SM1_Waitup;
 			break;
 
 		case SM1_down:
-			SM1_STATE = SM1_Wait;
+			SM1_STATE = SM1_Waitdown;
 			break;
 
 		case SM1_reset:
@@ -53,6 +53,9 @@ void Tick_Toggle() {
 			else if(PINA == 0x00){		
 				SM1_STATE = SM1_Wait;
 			}
+			else if(PINA == 0x03){
+				SM1_STATE = SM1_reset;
+			}
 			break;
 		
 		case SM1_Waitup:
@@ -61,7 +64,10 @@ void Tick_Toggle() {
 			}
 			else if(PINA == 0x00){		
 				SM1_STATE = SM1_Wait;
-			}			
+			}
+			else if(PINA == 0x03){
+				SM1_STATE = SM1_reset;
+			}		
 			break;
 
       		default:

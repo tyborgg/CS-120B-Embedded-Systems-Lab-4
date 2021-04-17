@@ -1,7 +1,7 @@
 /*	Author: tpast001
  *  Partner(s) Name: N/A
  *	Lab Section: 023
- *	Assignment: Lab #4  Exercise #2
+ *	Assignment: Lab #4  Exercise #1
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example

@@ -32,7 +32,15 @@ void Tick_Toggle() {
 			break;
 
 		case SM1_pound:
-			SM1_STATE = SM1_Waitpound;
+			if(PINA == 0x03){
+				SM1_STATE = SM1_pound;	
+			}
+			else if(PINA == 0x00){
+				SM1_STATE = SM1_Waitpound;
+			}
+			else{
+				SM1_STATE = SM1_lock;
+			}
 			break;
 /*
 		case SM1_Y:
@@ -44,18 +52,18 @@ void Tick_Toggle() {
 			break;*/
 		
 		case SM1_Waitpound:
-			if(PINA == 0x03){
-				SM1_STATE = SM1_Waitpound;
-			}
-			else if(PINA == 0x00){		
-				SM1_STATE = SM1_Waitpound;
-			}
-			else if(PINA == 0x02){
+			if(PINA == 0x02){
 				SM1_STATE = SM1_unlocked;
 			}
 			else if(PINA == 0x80){
 				SM1_STATE = SM1_lock;
-			}			
+			}
+			else if(PINA == 0x00){
+				SM1_STATE = SM1_Waitpound;
+			}
+			else{
+				SM1_STATE = SM1_lock;	
+			}
 			break;
 
 		case SM1_unlocked:

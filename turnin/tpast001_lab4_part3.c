@@ -115,7 +115,7 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
 	
-	PORTB = 0x00;
+	//PORTB = 0x00;
 
 	SM1_STATE = SM1_SMStart;
 

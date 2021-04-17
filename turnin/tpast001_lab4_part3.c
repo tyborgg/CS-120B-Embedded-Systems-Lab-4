@@ -16,7 +16,7 @@ enum SM1_STATES {SM1_SMStart, SM1_pound, SM1_lock, SM1_unlocked, SM1_Waitpound} 
 void Tick_Toggle() { 
 	switch(SM1_STATE) { 
      		case SM1_SMStart:
-      			SM1_STATE = SM1_Wait;
+      			SM1_STATE = SM1_lock;
          		break;
 
 		case SM1_lock:
@@ -46,7 +46,7 @@ void Tick_Toggle() {
 		case SM1_Waitpound:
 			if(PINA == 0x03){
 				SM1_STATE = SM1_Waitpound;
-A			}
+			}
 			else if(PINA == 0x00){		
 				SM1_STATE = SM1_Waitpound;
 			}
@@ -58,7 +58,7 @@ A			}
 			}			
 			break;
 
-		cas SM1_unlocked:
+		case SM1_unlocked:
 			if(PINA == 0x80){
 				SM1_STATE = SM1_lock;
 			}

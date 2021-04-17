@@ -1,127 +1,55 @@
-/*	Author: tpast001
- *  Partner(s) Name: N/A
- *	Lab Section: 023
- *	Assignment: Lab #4  Exercise #3
- *	Exercise Description: [optional - include for your own benefit]
- *
- *	I acknowledge all content contained herein, excluding template or example
- *	code, is my own original work.
- */
-#include <avr/io.h>
-#ifdef _SIMULATE_
-#include "simAVRHeader.h"
-#endif
+# Array of tests to run (in order)
+# Each test contains
+#   description - 
+#   steps - A list of steps to perform, each step can have
+#       inputs - A list of tuples for the inputs to apply at that step
+#       *time - The time (in ms) to wait before continuing to the next step 
+#           and before checking expected values for this step. The time should be a multiple of
+#           the period of the system
+#       *iterations - The number of clock ticks to wait (periods)
+#       expected - The expected value at the end of this step (after the "time" has elapsed.) 
+#           If this value is incorrect the test will fail early before completing.
+#       * only one of these should be used
+#   expected - The expected output (as a list of tuples) at the end of this test
+# An example set of tests is shown below. It is important to note that these tests are not "unit tests" in 
+# that they are not ran in isolation but in the order shown and the state of the device is not reset or 
+# altered in between executions (unless preconditions are used).
+#tests = [ {'description': 'This test will run first.',
+#    'steps': [ {'inputs': [('PINA',<val>)], 'iterations': 1 } ],
+#    'expected': [('PORT',<val>)],
+#    },
+#    {'description': 'This test will run second.',
+#    'steps': [ {'inputs': [('PIN', <val>)],'iterations': 1}, # Set PIN to val then run one iteration
+#        {'inputs': [('PIN',<val>)], 'time': 300 }, # Set PIN to val then run 300 ms
+#        {'inputs': [('PIN',<val>)], 'iterations': 1, 'expected': [('PORT',<val>)]}, 
+#        {'inputs': [('PIN',<val>)], 'time': 600}, ],
+#    'expected': [('PORT',<val>)],
+#    },
+#    ]
 
-enum SM1_STATES {SM1_SMStart, SM1_pound, SM1_lock, SM1_unlocked, SM1_Waitpound, SM1_Y} SM1_STATE;
-void Tick_Toggle() { 
-	switch(SM1_STATE) { 
-     		case SM1_SMStart:
-      			SM1_STATE = SM1_lock;
-         		break;
+# Optionally you can add a set of "watch" variables these need to be global or static and may need
+# to be scoped at the function level (for static variables) if there are naming conflicts. The 
+# variables listed here will display everytime you hit (and stop at) a breakpoint
+#watch = ['<function>::<static-var>','PORTB']
 
-		case SM1_lock:
-			if(PINA == 0x04){
-				SM1_STATE = SM1_pound;
-			}
-			else if(PINA == 0x02 || PINA == 0x01){
-				SM1_STATE = SM1_lock;
-			}
-			else{
-				SM1_STATE = SM1_lock;
-			}      		
-			break;
-
-		case SM1_pound:
-			if(PINA == 0x04){
-				SM1_STATE = SM1_pound;	
-			}
-			else if(PINA == 0x00){
-				SM1_STATE = SM1_Waitpound;
-			}
-			else{
-				SM1_STATE = SM1_lock;
-			}
-			break;
-
-		case SM1_Y:
-			if(PINA == 0x02){
-				SM1_STATE = SM1_Y;
-			}
-			else if(PINA == 0x00){
-				SM1_STATE = SM1_unlocked;
-			}
-			else{
-				SM1_STATE = SM1_lock;
-			}
-			break;
-/*
-		case SM1_X:
-			SM1_STATE = SM1_lock;
-			break;*/
-		
-		case SM1_Waitpound:
-			if(PINA == 0x02){
-				SM1_STATE = SM1_Y;
-			}
-			else if(PINA == 0x80){
-				SM1_STATE = SM1_lock;
-			}
-			else if(PINA == 0x00){
-				SM1_STATE = SM1_Waitpound;
-			}
-			else{
-				SM1_STATE = SM1_lock;	
-			}
-			break;
-
-		case SM1_unlocked:
-			if(PINA == 0x80){
-				SM1_STATE = SM1_lock;
-			}
-			else{
-				SM1_STATE = SM1_unlocked;
-			}
-			break;
-
-      		default:
-         		SM1_STATE = SM1_lock;
-         		break;
-   	}
-
-   	switch(SM1_STATE) { 
-      		case SM1_SMStart:
-         		break;
-
-		case SM1_lock:
-			PORTB = 0x00;
-         		break;
-      		
-		case SM1_pound:
-         		break;
-
-      		case SM1_Waitpound:
-        		break;
-			
-		case SM1_Y:
-        		break;
-
-		case SM1_unlocked:
-         		PORTB = 0x01;
-        		break; 	
-	}
-}
-
-int main(void) {
-	DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x00;
-	
-	//PORTB = 0x00;
-
-	SM1_STATE = SM1_SMStart;
-
-	while(1){
-		Tick_Toggle();
-	}
-
-	return 0;
-}
+tests = [ {'description': 'PINA: 0x04, 0x00, 0x02 => PORTB: 1, state: pressA1',
+    'steps': [{'inputs': [('PINA', 0x04)], 'iterations': 2},
+        {'inputs': [('PINA', 0x00)], 'iterations': 2},
+        {'inputs': [('PINA', 0x02)], 'iterations': 2},
+        {'inputs': [('PINA', 0x00)], 'iterations': 2}],
+    'expected': [('PORTB',0x01)],
+    },
+    {'description': 'PINA: 0x80, 0x00, 0x01 => PORTB: 0, state: pressA1',
+    'steps': [{'inputs': [('PINA', 0x80)], 'iterations': 2},
+        {'inputs': [('PINA', 0x00)], 'iterations': 2},
+        {'inputs': [('PINA', 0x01)], 'iterations': 2}],
+    'expected': [('PORTB',0x00)],
+    },   
+    {'description': 'PINA: 0x04, 0x00, 0x80 => PORTB: 0, state: pressA1',
+    'steps': [{'inputs': [('PINA', 0x04)], 'iterations': 2},
+        {'inputs': [('PINA', 0x00)], 'iterations': 2},
+        {'inputs': [('PINA', 0x80)], 'iterations': 2}],
+    'expected': [('PORTB',0x00)],
+    },       
+    ]
+#wacth = ['state']

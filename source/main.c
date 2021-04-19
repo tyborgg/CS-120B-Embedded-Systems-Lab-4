@@ -12,9 +12,11 @@
 #include "simAVRHeader.h"
 #endif
 
-int code[] = {0x04, 0x01, 0x02, 0x01};
+int code[4] = {4, 1, 2, 1};
 int temp[4];
-int count = 0;
+int count;
+int prev;
+int test;
 
 enum SM1_STATES {SM1_SMStart, SM1_lock, SM1_unlocked, SM1_reset1, SM1_reset2} SM1_STATE; //SM1_Wait1, SM1_Wait2 } SM1_STATE;
 void Tick_Toggle() { 
@@ -24,66 +26,105 @@ void Tick_Toggle() {
          		break;
 
 		case SM1_lock:
-			if(PINA == code[count]){
-				if(count == 3){
-					SM1_STATE = SM1_reset1;
-				}
-				else{
-					temp[count] = PINA;
-					count += 1;	
-					SM1_STATE = SM1_lock;
-				}
+			if (count == 0){
+				temp[0] = PINA;
+				count++;
 			}
-			else if(PINA == 0x00){
-				SM1_STATE = SM1_lock;		
-			}
-			else if(count == 3 && (temp[0] != code[0] || temp[1] != code[1] || temp[2] != code[2] || PINA != code[3])){
-				SM1_STATE = SM1_reset1;
-			} 		
-			else {
-				SM1_STATE = SM1_lock;
+			else if(count != 4){
+				if(PINA != prev){
+					if(PINA == 0x00){
+						SM1_STATE = SM1_lock;		
+					}
+					else{
+						temp[count] = PINA;
+						count++;
+
+						if(count == 4){
+							//test = 9;
+							if(temp[0] == code[0] && temp[1] == code[1] && temp[2] == code[2] && temp[3] == code[3]){
+								//test = 10;
+								count--;
+								SM1_STATE = SM1_reset1;
+							}
+							else{
+								//test = 11;
+								SM1_STATE = SM1_reset1;
+							}
+						}						
+						else{
+							//test = 7;
+							SM1_STATE = SM1_lock;	
+						}
+					}
+				}
 			}
 			break;
 
 		case SM1_unlocked:
-			if(PINA == code[count]){
-				if(count == 3){
-					SM1_STATE = SM1_lock;
-				}
-				else{
-					temp[count] = PINA;
-					count += 1;
-					SM1_STATE = SM1_unlocked;
-				}
-			}
-			else if(PINA == 0x00){
-				SM1_STATE = SM1_unlocked;		
-			}		
-			else if(PINA == 0x80){
+			if(PINA == 0x80){
 				SM1_STATE = SM1_lock;
 			}
-			else if(count == 3 && (temp[0] != code[0] || temp[1] != code[1] || temp[2] != code[2] || PINA != code[3])){
-				SM1_STATE = SM1_reset2;
+			else if(count == 0){
+				temp[0] = PINA;
+				count++;
 			}
-			else{
-				SM1_STATE = SM1_unlocked;
+			else if(count != 4){
+				if(PINA != prev){
+					if(PINA == 0x00){
+						SM1_STATE = SM1_unlocked;		
+					}
+					else{
+						temp[count] = PINA;
+						count++;
+
+						if(count == 4){
+							//test = 9;
+							if(temp[0] == code[0] && temp[1] == code[1] && temp[2] == code[2] && temp[3] == code[3]){
+								//test = 10;
+								count--;
+								SM1_STATE = SM1_reset2;
+							}
+							else{
+								//test = 11;
+								SM1_STATE = SM1_reset2;
+							}
+						}						
+						else{
+							//test = 7;
+							SM1_STATE = SM1_unlocked;	
+						}
+					}
+				}		
+			}	
+			if(count == 4){
+				if(temp == code){
+					count--;
+					SM1_STATE = SM1_reset2;
+				}
+				else{
+					SM1_STATE = SM1_reset2;
+				}
 			}		
 			break;
 		
 		case SM1_reset1:
 			if(count == 3){
+				count = 0;
 				SM1_STATE = SM1_unlocked;
 			}
 			else{
+				count = 0;
 				SM1_STATE = SM1_lock;
 			}						
 			break;
 
 		case SM1_reset2:
 			if(count == 3){
+				count = 0;
 				SM1_STATE = SM1_lock;
 			}
 			else{
+				count = 0;
 				SM1_STATE = SM1_unlocked;
 			}		
 			break;			
@@ -143,11 +184,9 @@ void Tick_Toggle() {
          		break;
 
 		case SM1_reset1:
-			count = 0;
 			break;
 
 		case SM1_reset2:
-			count = 0;
 			break;
 
 		/*case SM1_Wait1:
@@ -166,6 +205,9 @@ void Tick_Toggle() {
 int main(void) {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
+
+	prev = 0;
+	count = 0;
 	
 	//PORTB = 0x00;
 	count = 0;
@@ -173,6 +215,7 @@ int main(void) {
 
 	while(1){
 		Tick_Toggle();
+		prev = PINA;
 	}
 
 	return 0;

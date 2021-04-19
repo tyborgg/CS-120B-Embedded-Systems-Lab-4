@@ -27,8 +27,14 @@ void Tick_Toggle() {
 
 		case SM1_lock:
 			if (count == 0){
-				temp[0] = PINA;
-				count++;
+				if(PINA == 0x04){
+					temp[0] = PINA;
+					count++;
+					SM1_STATE = SM1_lock;
+				}
+				else{
+					SM1_STATE = SM1_lock;	
+				}
 			}
 			else if(count != 4){
 				if(PINA != prev){
@@ -65,8 +71,14 @@ void Tick_Toggle() {
 				SM1_STATE = SM1_lock;
 			}
 			else if(count == 0){
-				temp[0] = PINA;
-				count++;
+				if(PINA == 0x04){
+					temp[0] = PINA;
+					count++;
+					SM1_STATE = SM1_unlocked;
+				}
+				else{
+					SM1_STATE = SM1_unlocked;	
+				}		
 			}
 			else if(count != 4){
 				if(PINA != prev){
